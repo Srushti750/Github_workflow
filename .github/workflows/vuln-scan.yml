@@ -1,0 +1,51 @@
+name: Vulnerability Scan  
+on:  
+  push:  
+    branches: [ "main" ]  
+  pull_request:  
+    branches: [ "main" ]  
+
+jobs:  
+  scan:  
+    runs-on: ubuntu-latest  
+    steps:  
+      # Checkout the repository  
+      - uses: actions/checkout@v4  
+
+      # Set up Python  
+      - name: Set up Python  
+        uses: actions/setup-python@v4  
+        with:  
+          python-version: "3.10"  
+
+      # Install dependencies  
+      - name: Install dependencies  
+        run: |  
+          pip install -r requirements.txt  
+          pip install flask pymongo python-dotenv  
+
+      # Start Flask server in background  
+      - name: Start Flask server  
+        run: |  
+          nohup python app.py > flask.log 2>&1 &  
+          echo "FLASK_PID=$!" >> $GITHUB_ENV  
+          sleep 5  # Wait for server to start  
+
+      # Run the scanner  
+      - name: Scan repository  
+        run: |  
+          python cli.py https://github.com/${{ github.repository }} sql  
+
+      # Upload scan logs as artifacts  
+      - name: Upload report  
+        uses: actions/upload-artifact@v3  
+        with:  
+          name: vulnerability-report  
+          path: |  
+            flask.log  
+
+      # Stop Flask server (even if previous steps fail)  
+      - name: Stop Flask server  
+        if: always()  
+        run: |  
+          kill ${{ env.FLASK_PID }}  
