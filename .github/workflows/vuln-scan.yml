@@ -1,51 +1,65 @@
-name: Vulnerability Scan  
-on:  
-  push:  
-    branches: [ "main" ]  
-  pull_request:  
-    branches: [ "main" ]  
+name: Vulnerability Scan
+on: [push, pull_request]
 
-jobs:  
-  scan:  
-    runs-on: ubuntu-latest  
-    steps:  
-      # Checkout the repository  
-      - uses: actions/checkout@v4  
-
-      # Set up Python  
-      - name: Set up Python  
-        uses: actions/setup-python@v4  
-        with:  
-          python-version: "3.10"  
-
-      # Install dependencies  
-      - name: Install dependencies  
-        run: |  
-          pip install -r requirements.txt  
-          pip install flask pymongo python-dotenv  
-
-      # Start Flask server in background  
-      - name: Start Flask server  
-        run: |  
-          nohup python app.py > flask.log 2>&1 &  
-          echo "FLASK_PID=$!" >> $GITHUB_ENV  
-          sleep 5  # Wait for server to start  
-
-      # Run the scanner  
-      - name: Scan repository  
-        run: |  
-          python cli.py https://github.com/${{ github.repository }} sql  
-
-      # Upload scan logs as artifacts  
-      - name: Upload report  
-        uses: actions/upload-artifact@v3  
-        with:  
-          name: vulnerability-report  
-          path: |  
-            flask.log  
-
-      # Stop Flask server (even if previous steps fail)  
-      - name: Stop Flask server  
-        if: always()  
-        run: |  
-          kill ${{ env.FLASK_PID }}  
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install gdown  # Ensure gdown is installed
+      
+      - name: Create data directories
+        run: |
+          mkdir -p data model
+      
+      - name: Download and assemble chunks
+        run: |
+          # Download all chunks first
+          gdown "https://drive.google.com/uc?id=CHUNK_ID_1" -O data/command_injection_part_aa
+          gdown "https://drive.google.com/uc?id=CHUNK_ID_2" -O data/command_injection_part_ab
+          gdown "https://drive.google.com/uc?id=SQL_CHUNK_ID_1" -O data/sql_part_aa
+          gdown "https://drive.google.com/uc?id=SQL_CHUNK_ID_2" -O data/sql_part_ab
+          
+          # Download model files
+          gdown "https://drive.google.com/uc?id=MODEL_ID_1" -O model/LSTM_model_sql.h5
+          gdown "https://drive.google.com/uc?id=MODEL_ID_2" -O model/LSTM_model_command_injection.h5
+          
+          # Reassemble files (if needed)
+          cat data/command_injection_part_* > data/command_injection_dataset_finaltest_X
+          cat data/sql_part_* > data/sql_dataset_finaltest_X
+          
+          # Verify file sizes
+          ls -lh data/
+      
+      - name: Start Flask server
+        run: |
+          nohup python app.py > flask.log 2>&1 &
+          echo "FLASK_PID=$!" >> $GITHUB_ENV
+          sleep 5
+      
+      - name: Run scan
+        run: |
+          python cli.py https://github.com/${{ github.repository }} sql
+      
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: vulnerability-report
+          path: |
+            flask.log
+            data/command_injection_dataset_finaltest_X  # Optional: include assembled file
+      
+      - name: Stop Flask server
+        if: always()
+        run: |
+          kill ${{ env.FLASK_PID }} || echo "Flask server already stopped"
+          rm -f data/command_injection_dataset_finaltest_X data/sql_dataset_finaltest_X  # Clean assembled files

@@ -71,9 +71,11 @@ def scan_repo():
 
         # Scan files
         results = []
+        files_scanned = 0
         for root, _, files in os.walk(clone_path):
             for file in files:
                 if file.endswith('.py'):
+                    files_scanned += 1
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r', encoding='utf-8') as f:
                         code = f.read()
@@ -96,8 +98,8 @@ def scan_repo():
             "status": "success",
             "results": convert_objectid(results),
             "metrics": {
-                "files_scanned": len(results),
-                "vulnerabilities_found": sum(1 for r in results)
+                "files_scanned": files_scanned,
+                "vulnerabilities_found": len(results)
             }
         })
 
