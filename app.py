@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 # MongoDB setup
 client = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
-db = client.VulnerabilityDB
+db = client.WorkflowDB
 
 def cleanup_repo(path):
     """Remove cloned repository after scanning"""

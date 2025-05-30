@@ -5,7 +5,6 @@ import numpy as np
 from keras.models import load_model
 from keras_preprocessing.sequence import pad_sequences
 import gdown
-import glob
 
 # Constants
 MAX_SEQ_LENGTH = 50
@@ -18,22 +17,22 @@ DRIVE_FILE_IDS = {
     "LSTM_model_command_injection.h5": "1RZ0bbtkr_EXf-1EaXWXFJVIls5gIlwCZ",
 }
 
-# Define chunks
+# Chunk definitions (if needed)
 COMMAND_CHUNKS = [f"data/part_{ch}" for ch in ["aa", "ab", "ac", "ad", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap"]]
-SQL_CHUNKS = [f"data/part_{ch}" for ch in ["aa", "ab", "ac", "ad", "ae", "af", "ag", "ah", "ai","aj", "ak","al","am","an","ao","ap","aq","as","at","au","av","aw","ax","ay","az","ba","bb","bc","bd","be","bf","bg","bh"]]
+SQL_CHUNKS = [f"data/part_{ch}" for ch in [
+    "aa", "ab", "ac", "ad", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap",
+    "aq", "as", "at", "au", "av", "aw", "ax", "ay", "az", "ba", "bb", "bc", "bd", "be", "bf", "bg", "bh"
+]]
 
 def reassemble_file(chunk_list, output_path):
-    """Combine chunks into one file"""
     with open(output_path, "wb") as outfile:
         for part in chunk_list:
             with open(part, "rb") as infile:
                 outfile.write(infile.read())
-    # Cleanup
     for part in chunk_list:
         os.remove(part)
 
 def download_file_from_drive(file_id, output_path):
-    # TODO: Change the drive url
     gdown.download(f"https://drive.google.com/uc?id={file_id}", str(output_path), quiet=False)
 
 def ensure_data_available(filename):
@@ -42,23 +41,22 @@ def ensure_data_available(filename):
     data_dir.mkdir(parents=True, exist_ok=True)
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    file_path = data_dir / filename if filename.startswith("sql") or filename.startswith("command") else model_dir / filename
+    file_path = data_dir / filename if "dataset" in filename else model_dir / filename
     if file_path.exists():
         return
 
     print(f"Preparing {filename}...")
+
     if filename == "command_injection_dataset_finaltest_X":
         print("Downloading command injection chunks...")
         for idx, part in enumerate(COMMAND_CHUNKS[:2]):
-            # TODO: Change the drive url
-            gdown.download(f"https://drive.google.com/uc?id=CHUNK_ID_{idx+1}", part, quiet=False)
+            gdown.download(f"https://drive.google.com/uc?id={idx+1}", part, quiet=False)
         reassemble_file(COMMAND_CHUNKS[:2], data_dir / filename)
 
     elif filename == "sql_dataset_finaltest_X":
         print("Downloading SQL injection chunks...")
         for idx, part in enumerate(SQL_CHUNKS):
-            # TODO: Change the drive url
-            gdown.download(f"https://drive.google.com/uc?id=SQL_CHUNK_ID_{idx+1}", part, quiet=False)
+            gdown.download(f"https://drive.google.com/uc?id={idx+1}", part, quiet=False)
         reassemble_file(SQL_CHUNKS, data_dir / filename)
 
     elif filename in DRIVE_FILE_IDS:
@@ -66,20 +64,20 @@ def ensure_data_available(filename):
         download_file_from_drive(DRIVE_FILE_IDS[filename], file_path)
 
     else:
-        raise ValueError(f"No handling logic for {filename}")
+        raise ValueError(f"No download handling for {filename}")
 
 def get_data_path(filename):
     ensure_data_available(filename)
     path = Path("data") / filename
     if not path.exists():
-        raise FileNotFoundError(f"{filename} not found even after download")
+        raise FileNotFoundError(f"{filename} not found")
     return str(path)
 
 def get_model_path(filename):
     ensure_data_available(filename)
     path = Path("model") / filename
     if not path.exists():
-        raise FileNotFoundError(f"{filename} not found even after download")
+        raise FileNotFoundError(f"{filename} not found")
     return str(path)
 
 def load_dataset(mode):
@@ -116,23 +114,17 @@ def pattern_match_command_injection(code):
     ]
     return any(p in code for p in dangerous_patterns)
 
-def predict_vulnerability(code, mode):
-    confidence = lstm_predict(code, mode)
+def predict_vulnerability(code, mode="sql"):
+    confidence = 0.0
+    if mode == "command_injection" and pattern_match_command_injection(code):
+        confidence = 0.9
+
+    if confidence < 0.5:
+        confidence = lstm_predict(code, mode)
+
     return {
         "type": mode,
         "confidence": float(confidence),
-        "is_vulnearble": confidence >= 0.3,
+        "is_vulnerable": confidence >= 0.3,
+        "detection_method": "pattern" if confidence >= 0.9 else "model"
     }
-
-# def predict_vulnerability(code, mode="sql"):
-#     confidence = 0.0
-#     if mode == "command_injection" and pattern_match_command_injection(code):
-#         confidence = 0.9
-#     if confidence < 0.5:
-#         confidence = lstm_predict(code, mode)
-#     return {
-#         "type": mode,
-#         "confidence": float(confidence),
-#         "is_vulnerable": confidence >= 0.3,
-#         "detection_method": "pattern" if confidence >= 0.9 else "model"
-#     }

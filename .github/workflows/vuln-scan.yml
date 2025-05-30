@@ -24,17 +24,64 @@ jobs:
       - name: Download and assemble chunks
         run: |
           # Download all chunks first
-          gdown "https://drive.google.com/uc?id=CHUNK_ID_1" -O data/command_injection_part_aa
-          gdown "https://drive.google.com/uc?id=CHUNK_ID_2" -O data/command_injection_part_ab
-          gdown "https://drive.google.com/uc?id=SQL_CHUNK_ID_1" -O data/sql_part_aa
-          gdown "https://drive.google.com/uc?id=SQL_CHUNK_ID_2" -O data/sql_part_ab
+          gdown "https://drive.google.com/file/d/1q-XhXsmVK5G_askPIi2V8Q8xUVnQ5uaW/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_aa
+          gdown "https://drive.google.com/file/d/1-D-z2WErJOQWWfOQiVdI3lDhZdshroLD/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ab
+          gdown "https://drive.google.com/file/d/12pgJbVsSEl-DtzBe8-_khtKdJAO1yesK/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ac
+          gdown "https://drive.google.com/file/d/1_DbkmyYg4hVUJI6qqM-WO-irwgEKMkWi/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ad
+          gdown "https://drive.google.com/file/d/1aRiyzBy_aWv2vyRzsEeCBK05MvhtsdBn/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ae
+          gdown "https://drive.google.com/file/d/1JjzpVTbg8pijmk1SBVvtWbr5CJ8sih3X/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_af
+          gdown "https://drive.google.com/file/d/1weXs3Ojr9uBBEKPXCe1p1fFVpTUT1pG8/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ag
+          gdown "https://drive.google.com/file/d/1SjHAWBu6f7JSBEDjSGcXgt-9DOrsyvZg/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ah
+          gdown "https://drive.google.com/file/d/1RsvxvLeF5hjg-xPdHWrgvvqp5B0aVwdF/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ai
+          gdown "https://drive.google.com/file/d/12z4-7tZOToJ4Hz2uxKmr963JA3owedpT/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_aj
+          gdown "https://drive.google.com/file/d/1EHzy0RNkczzDXaNv6Vqi5aWdgXdXj5hW/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_ak
+          gdown "https://drive.google.com/file/d/1JkCQL71MwBPB1YQHlYiRJNYNhWGH_9G2/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_al
+          data/command_injection_dataset_finaltest_X_part_am
+          gdown "https://drive.google.com/file/d/1ZTzDkBGWRSc9r825RD4B-yXzNpVngFtK/view?usp=drive_link" data/command_injection_dataset_finaltest_X_part_an
+          gdown "https://drive.google.com/file/d/1fdTxuscikIITP8pW6cQc60ATWraXhrJD/view?usp=drive_link" data/command_injection_dataset_finaltest_X_part_ao
+          gdown "https://drive.google.com/file/d/1R1SMvOnLxsFpS57D2_mnZaOXzGcfl-TS/view?usp=drive_link" data/command_injection_dataset_finaltest_X_part_ap
+
+          gdown "https://drive.google.com/file/d/1riRUBQHTDFHU8i9nKw-4eGTOAQ9QXkmK/view?usp=sharing" -O data/sql_part_aa
+          gdown "https://drive.google.com/file/d/11GF8x4CD1Np71XwGDp-NaoQtd2oHKYyw/view?usp=drive_link" -O data/sql_part_ab
+          gdown "https://drive.google.com/file/d/14iNLJ3UJfIGRoSctxDIAa1EULF4Hau_t/view?usp=drive_link" -O data/sql_part_ac
+          gdown "https://drive.google.com/file/d/1eEqUUEGs6uI-nw5xL5UJCFGFCgpFbJnA/view?usp=drive_link" -O data/sql_part_ad
+          gdown "https://drive.google.com/file/d/1mQzGKQLyrxk1wnj6VRWSLv7d08iinVYc/view?usp=drive_link" -O data/sql_part_ae
+          gdown "https://drive.google.com/file/d/1P3JPAenm05knI289kC87orsFhkeDh_xb/view?usp=drive_link" -O data/sql_part_af
+          gdown "https://drive.google.com/file/d/12Apb3C7ftWvahIeZrAcG5TdeYJAhaE9c/view?usp=drive_link" -O data/sql_part_ag
+          gdown "https://drive.google.com/file/d/1r1KMnXecpg_3uRwKThEMrSFi0jh0UqnY/view?usp=drive_link" -O data/sql_part_ah
+          gdown "https://drive.google.com/file/d/1SgGP9MLOCealCz2k7BH9HqHveMVMPrNe/view?usp=drive_link" -O data/sql_part_ai
+          gdown "https://drive.google.com/file/d/14KbY4VebCnP4DGKUKu-4SEtHMsMiP75g/view?usp=drive_link" -O data/sql_part_aj
+          gdown "https://drive.google.com/file/d/10n-GcXcnKYsOtPjjS4L9Tk7CgdHA2dKJ/view?usp=drive_link" -O data/sql_part_ak
+          gdown "https://drive.google.com/file/d/1bvJA71H8SJgU7i1pn9u-qAGS47AbIy-_/view?usp=drive_link" -O data/sql_part_al
+          gdown "https://drive.google.com/file/d/11PH5ctZkYuww2WQzf77oWB1i2z-dOVKl/view?usp=drive_link" -O data/sql_part_am
+          gdown "https://drive.google.com/file/d/1aRGBhiXe-sPAGLvxy1t85dYaMFRXJfu-/view?usp=drive_link" -O data/sql_part_an
+          gdown "https://drive.google.com/file/d/1_qizmgzmPLfwPGkRgYF6-eeFfwh_znP7/view?usp=drive_link" -O data/sql_part_ao
+          gdown "https://drive.google.com/file/d/1tZjdGELtHBhlzTb303IK9ZuZ8giwCKcO/view?usp=drive_link" -O data/sql_part_ap
+          gdown "https://drive.google.com/file/d/1Ldb0cOVOYsCZgRMCD8VTMH2l37cJWUT1/view?usp=drive_link" -O data/sql_part_aq
+          gdown "https://drive.google.com/file/d/1d_HNgtx3vBahXTHz8oTWyB0VFuKjLeHs/view?usp=drive_link" -O data/sql_part_ar
+          gdown "https://drive.google.com/file/d/1ULHYuHen2fh98zUyN4DMTvRhJB1YzUjw/view?usp=drive_link" -O data/sql_part_as
+          gdown "https://drive.google.com/file/d/1ndEw89nzstTY-kU8T8KoqtgwQN6swzMg/view?usp=drive_link" -O data/sql_part_at
+          gdown "https://drive.google.com/file/d/1ZSeERkrltGfXopFpfRFARnW21algNnF3/view?usp=drive_link" -O data/sql_part_au
+          gdown "https://drive.google.com/file/d/1bDsMH61sBBVSzhP7XQKQEQU8-SclX0Ko/view?usp=drive_link" -O data/sql_part_av
+          gdown "https://drive.google.com/file/d/1E_ABxeAggtr_oz0I15RAw0g_-1i9sNCw/view?usp=drive_link" -O data/sql_part_aw
+          gdown "https://drive.google.com/file/d/1nSZ8Ry0oIEs-wcZUVF4C2IJWUJIZI6Mt/view?usp=drive_link" -O data/sql_part_ax
+          gdown "https://drive.google.com/file/d/1JIlRQvniIm_6BKH3AP5o1QGdQZIn5Hh6/view?usp=drive_link" -O data/sql_part_ay
+          gdown "https://drive.google.com/file/d/1UkhH0txUGGrXtxWj8H0wi4kg54ZXjamU/view?usp=drive_link" -O data/sql_part_az
+          gdown "https://drive.google.com/file/d/1wk8fU7j_fyVnJWB3AsPFokZTFMi5bagH/view?usp=drive_link" -O data/sql_part_ba
+          gdown "https://drive.google.com/file/d/1R-e0JGH_ZAFxNpw3UX91pG6-wEP5pwEx/view?usp=drive_link" -O data/sql_part_bb
+          gdown "https://drive.google.com/file/d/1WupJgodm6sST43B_bEG5_ZUtfVyvfoCu/view?usp=drive_link" -O data/sql_part_bc
+          gdown "https://drive.google.com/file/d/1fH449WJQ4-grL-ywRoGyLHJlmBlMHY9I/view?usp=drive_link" -O data/sql_part_bd
+          gdown "https://drive.google.com/file/d/1oC9eUIljMCLYCKh4cRnAcYR8TvYQS82H/view?usp=drive_link" -O data/sql_part_be
+          gdown "https://drive.google.com/file/d/18pqdzxUvmmSVG3qixqMhViM9Gj-eWEF7/view?usp=drive_link" -O data/sql_part_bf
+          gdown "https://drive.google.com/file/d/1lZqPQcv8_tcppG2TMHbzqOUTkV0Dj1i1/view?usp=drive_link" -O data/sql_part_bg
+          gdown "https://drive.google.com/file/d/1LzgwOZk4bv7gw2P0Wyr0VUHqw9HPjewS/view?usp=drive_link" -O data/sql_part_bh
           
           # Download model files
-          gdown "https://drive.google.com/uc?id=MODEL_ID_1" -O model/LSTM_model_sql.h5
-          gdown "https://drive.google.com/uc?id=MODEL_ID_2" -O model/LSTM_model_command_injection.h5
+          gdown "https://drive.google.com/file/d/1OVHXTrVCFYclFt676ApwfbbGHFJ14jWy/view?usp=drive_link" -O model/LSTM_model_sql.h5
+          gdown "https://drive.google.com/file/d/1RZ0bbtkr_EXf-1EaXWXFJVIls5gIlwCZ/view?usp=drive_link" -O model/LSTM_model_command_injection.h5
           
           # Reassemble files (if needed)
-          cat data/command_injection_part_* > data/command_injection_dataset_finaltest_X
+          cat data/command_injection_dataset_finaltest_X_part_* > data/command_injection_dataset_finaltest_X
           cat data/sql_part_* > data/sql_dataset_finaltest_X
           
           # Verify file sizes
