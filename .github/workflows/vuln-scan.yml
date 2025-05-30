@@ -1,27 +1,30 @@
 name: Vulnerability Scan
+
 on: [push, pull_request]
 
 jobs:
   scan:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      
+
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install gdown  # Ensure gdown is installed
-      
+          pip install gdown
+
       - name: Create data directories
-        run: |
-          mkdir -p data model
-      
-      - name: Download and assemble chunks
+        run: mkdir -p data model
+
+      - name: Download model files
         run: |
           # Download all chunks first
           gdown "https://drive.google.com/file/d/1q-XhXsmVK5G_askPIi2V8Q8xUVnQ5uaW/view?usp=drive_link" -O data/command_injection_dataset_finaltest_X_part_aa
@@ -80,33 +83,23 @@ jobs:
           gdown "https://drive.google.com/file/d/1OVHXTrVCFYclFt676ApwfbbGHFJ14jWy/view?usp=drive_link" -O model/LSTM_model_sql.h5
           gdown "https://drive.google.com/file/d/1RZ0bbtkr_EXf-1EaXWXFJVIls5gIlwCZ/view?usp=drive_link" -O model/LSTM_model_command_injection.h5
           
-          # Reassemble files (if needed)
-          cat data/command_injection_dataset_finaltest_X_part_* > data/command_injection_dataset_finaltest_X
-          cat data/sql_part_* > data/sql_dataset_finaltest_X
-          
-          # Verify file sizes
-          ls -lh data/
-      
-      - name: Start Flask server
+
+      - name: Assemble dataset (if chunks are already in repo or uploaded separately)
         run: |
-          nohup python app.py > flask.log 2>&1 &
-          echo "FLASK_PID=$!" >> $GITHUB_ENV
-          sleep 5
-      
-      - name: Run scan
+          # If chunks were downloaded earlier or part of repo/artifact, assemble them:
+          # cat data/command_injection_dataset_finaltest_X_part_* > data/command_injection_dataset_finaltest_X
+          # cat data/sql_part_* > data/sql_dataset_finaltest_X
+          echo "Chunk reassembly skipped or handled in Python code"
+
+      - name: Run scanner
         run: |
           python cli.py https://github.com/${{ github.repository }} sql
-      
+
       - name: Upload report
         uses: actions/upload-artifact@v3
         with:
           name: vulnerability-report
           path: |
             flask.log
-            data/command_injection_dataset_finaltest_X  # Optional: include assembled file
-      
-      - name: Stop Flask server
-        if: always()
-        run: |
-          kill ${{ env.FLASK_PID }} || echo "Flask server already stopped"
-          rm -f data/command_injection_dataset_finaltest_X data/sql_dataset_finaltest_X  # Clean assembled files
+            data/command_injection_dataset_finaltest_X
+
