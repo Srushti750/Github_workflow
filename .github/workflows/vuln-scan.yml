@@ -99,11 +99,15 @@ jobs:
 
       - name: Run scanner
         run: |
-          python cli.py https://github.com/${{ github.repository }} --mode sql --format html > report.html
+          python cli.py https://github.com/${{ github.repository }} --mode sql > scan_results.json
+          echo "Scan completed at $(date)" >> scan_metadata.txt
 
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
           name: vulnerability-report
-          path: report.html
+          path: |
+            scan_results.json
+            scan_metadata.txt
+            data/sql_*  # Upload SQL-related data files
 
