@@ -106,6 +106,7 @@ jobs:
         with:
           name: vulnerability-report
           path: |
-            flask.log
-            data/command_injection_dataset_finaltest_X
+            scan_results.json
+            scan_metadata.txt
+            data/sql_*  # Upload SQL-related data files
 
