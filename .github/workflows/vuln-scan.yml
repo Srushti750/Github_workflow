@@ -99,8 +99,10 @@ jobs:
 
       - name: Run scanner
         run: |
-          python cli.py https://github.com/${{ github.repository }} --mode sql > scan_results.json
-          echo "Scan completed at $(date)" >> scan_metadata.txt
+          # python cli.py https://github.com/${{ github.repository }} --mode sql > scan_results.json
+          # echo "Scan completed at $(date)" >> scan_metadata.txt
+          python cli.py ${{ github.workspace }} --mode sql --local > scan_results.json
+          echo "Scan completed at $(date)" > scan_metadata.txt
 
       - name: Upload report
         uses: actions/upload-artifact@v4
